@@ -108,7 +108,7 @@ Tests use a `createFetchMock` utility that simulates the full json-server API in
 
 ## Design
 
-Custom design system built from scratch — no component library. Inspired by high-end editorial coffee branding:
+Custom design system built from scratch, no component library. Inspired by high-end editorial coffee branding:
 
 - **Fonts:** Cormorant Garamond (serif headings) + DM Sans (UI text)
 - **Palette:** Deep espresso backgrounds, parchment text, gold accents
