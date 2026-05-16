@@ -1,0 +1,68 @@
+{
+  "store_info": [
+    {
+      "id": 1,
+      "name": "Coffee R Us",
+      "description": "The go to store for your coffee needs",
+      "phone_number": "555-5555"
+    }
+  ],
+  "coffee": [
+    {
+      "id": 1,
+      "name": "Vanilla Bean",
+      "description": "Medium roast with a smooth, nutty flavor and a hint of vanilla.",
+      "origin": "Columbia",
+      "price": 10
+    },
+    {
+      "id": 2,
+      "name": "House Blend",
+      "description": "Dark roast, rich and full-bodied with chocolate notes.",
+      "origin": "Vietnam",
+      "price": 12
+    },
+    {
+      "id": 3,
+      "name": "Sunrise Espresso",
+      "description": "Bright citrus finish, perfect for morning shots.",
+      "origin": "Ethiopia",
+      "price": 14.5
+    },
+    {
+      "id": 4,
+      "name": "Highland Peaks",
+      "description": "Wine-like acidity and berry aromatics from high altitude farms.",
+      "origin": "Kenya",
+      "price": 16
+    },
+    {
+      "id": 5,
+      "name": "Decaf Dream",
+      "description": "Swiss-water processed decaf with caramel sweetness.",
+      "origin": "Columbia",
+      "price": 11
+    },
+    {
+      "id": 6,
+      "name": "Saigon Street",
+      "description": "Bold Robusta-forward blend with a smoky edge.",
+      "origin": "Vietnam",
+      "price": 9.5
+    },
+    {
+      "id": 7,
+      "name": "Yirgacheffe Light",
+      "description": "Floral jasmine and lemon zest in a delicate light roast.",
+      "origin": "Ethiopia",
+      "price": 15
+    },
+    {
+      "id": 8,
+      "name": "Savannah Gold",
+      "description": "Balanced cup with honey and black tea undertones.",
+      "origin": "Kenya",
+      "price": 13.25
+    }
+  ]
+}

@@ -1,7 +1,4 @@
-import {
-  useCallback,
-  useMemo,
-} from 'react'
+import { useCallback, useMemo } from 'react'
 import { StoreContext } from './storeContext.js'
 import { useFetchJson } from '../hooks/useFetchJson.js'
 
@@ -23,46 +20,49 @@ export function StoreProvider({ children }) {
     return Array.isArray(rows) ? rows : []
   }, [coffeeRes.data])
 
-  const reloadStore = storeRes.reload
-  const reloadCoffee = coffeeRes.reload
-
   const refreshAll = useCallback(async () => {
-    await Promise.all([reloadStore(), reloadCoffee()])
-  }, [reloadStore, reloadCoffee])
+    await Promise.all([storeRes.reload(), coffeeRes.reload()])
+  }, [storeRes, coffeeRes])
 
   const addCoffee = useCallback(
     async (payload) => {
-      const res = await fetch('/coffee', {
+      // Optimistic update — works even if the API is read-only (e.g. Vercel static)
+      const nextId = Math.max(0, ...(coffeeRes.data ?? []).map((c) => Number(c.id))) + 1
+      const created = { id: nextId, ...payload }
+      coffeeRes.setData((prev) => [...(prev ?? []), created])
+
+      // Best-effort persist to json-server when running locally
+      fetch('/coffee', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
-      })
-      if (!res.ok) throw new Error('Could not add product')
-      await reloadCoffee()
+      }).catch(() => {/* no-op on static hosts */})
     },
-    [reloadCoffee],
+    [coffeeRes],
   )
 
   const updateCoffee = useCallback(
     async (id, partial) => {
-      const res = await fetch(`/coffee/${id}`, {
+      coffeeRes.setData((prev) =>
+        (prev ?? []).map((c) => (String(c.id) === String(id) ? { ...c, ...partial } : c)),
+      )
+
+      fetch(`/coffee/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(partial),
-      })
-      if (!res.ok) throw new Error('Could not update product')
-      await reloadCoffee()
+      }).catch(() => {})
     },
-    [reloadCoffee],
+    [coffeeRes],
   )
 
   const deleteCoffee = useCallback(
     async (id) => {
-      const res = await fetch(`/coffee/${id}`, { method: 'DELETE' })
-      if (!res.ok) throw new Error('Could not delete product')
-      await reloadCoffee()
+      coffeeRes.setData((prev) => (prev ?? []).filter((c) => String(c.id) !== String(id)))
+
+      fetch(`/coffee/${id}`, { method: 'DELETE' }).catch(() => {})
     },
-    [reloadCoffee],
+    [coffeeRes],
   )
 
   const value = useMemo(
@@ -76,19 +76,8 @@ export function StoreProvider({ children }) {
       updateCoffee,
       deleteCoffee,
     }),
-    [
-      storeInfo,
-      coffees,
-      loading,
-      error,
-      refreshAll,
-      addCoffee,
-      updateCoffee,
-      deleteCoffee,
-    ],
+    [storeInfo, coffees, loading, error, refreshAll, addCoffee, updateCoffee, deleteCoffee],
   )
 
-  return (
-    <StoreContext.Provider value={value}>{children}</StoreContext.Provider>
-  )
+  return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>
 }
