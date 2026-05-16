@@ -3,6 +3,7 @@ import { StoreContext } from './storeContext.js'
 import { useFetchJson } from '../hooks/useFetchJson.js'
 
 // CRUD actions: addCoffee (POST), updateCoffee (PATCH), deleteCoffee (DELETE)
+// Mutations update local state optimistically so they work on static hosts too.
 export function StoreProvider({ children }) {
   const storeRes = useFetchJson('/store_info')
   const coffeeRes = useFetchJson('/coffee')
