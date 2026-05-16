@@ -1,5 +1,6 @@
 import { useId } from 'react'
 
+// Sidebar filters: debounced search + origin multi-select checkboxes
 const LOCATION_FILTERS = [
   { label: 'Columbia',  origin: 'Columbia' },
   { label: 'Vietnam',   origin: 'Vietnam' },

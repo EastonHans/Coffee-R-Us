@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { StoreContext } from './storeContext.js'
 import { useFetchJson } from '../hooks/useFetchJson.js'
 
+// CRUD actions: addCoffee (POST), updateCoffee (PATCH), deleteCoffee (DELETE)
 export function StoreProvider({ children }) {
   const storeRes = useFetchJson('/store_info')
   const coffeeRes = useFetchJson('/coffee')
