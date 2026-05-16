@@ -1,6 +1,6 @@
 # Coffee R Us
 
-A single-page application for a specialty coffee shop. Browse the catalog, filter by origin, manage inventory through an admin portal, and view individual product pages — all backed by a local REST API.
+A single-page application for a specialty coffee shop. Browse the catalog, filter by origin, manage inventory through an admin portal, and view individual product pages, all backed by a local REST API.
 
 ---
 
