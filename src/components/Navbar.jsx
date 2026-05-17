@@ -20,9 +20,6 @@ export function Navbar() {
           <NavLink to="/admin" className={linkClass}>
             Admin
           </NavLink>
-          <NavLink to="/shop" className="nav__cta">
-            Shop Now
-          </NavLink>
         </div>
       </nav>
     </header>
