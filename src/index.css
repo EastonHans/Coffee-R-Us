@@ -512,7 +512,7 @@ body {
 .pillar-num {
   font-family: var(--display);
   font-size: 4rem;
-  color: rgba(212, 245, 60, 0.1);
+  color: var(--lime);
   line-height: 1;
   margin-bottom: 0.5rem;
 }
