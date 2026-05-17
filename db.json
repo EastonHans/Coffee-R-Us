@@ -1,68 +1,74 @@
 {
   "store_info": [
-    {
-      "id": 1,
-      "name": "Coffee R Us",
-      "description": "The go to store for your coffee needs",
-      "phone_number": "555-5555"
-    }
+    { "id": 1, "name": "STRYD", "description": "Born to Move", "phone_number": "07123546789" }
   ],
-  "coffee": [
+  "sneakers": [
     {
       "id": 1,
-      "name": "Vanilla Bean",
-      "description": "Medium roast with a smooth, nutty flavor and a hint of vanilla.",
-      "origin": "Columbia",
-      "price": 10
+      "name": "Runner X1",
+      "description": "Carbon plate + StrydFoam™ stack. Race-day performance in an everyday trainer.",
+      "origin": "Running",
+      "price": 129,
+      "tag": "Best Seller",
+      "img": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&h=500&fit=crop&q=80"
     },
     {
       "id": 2,
-      "name": "House Blend",
-      "description": "Dark roast, rich and full-bodied with chocolate notes.",
-      "origin": "Vietnam",
-      "price": 12
+      "name": "Air Low",
+      "description": "Street-ready silhouette. All-day comfort. Clean enough for anywhere.",
+      "origin": "Lifestyle",
+      "price": 110,
+      "img": "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=500&h=500&fit=crop&q=80"
     },
     {
       "id": 3,
-      "name": "Sunrise Espresso",
-      "description": "Bright citrus finish, perfect for morning shots.",
-      "origin": "Ethiopia",
-      "price": 14.5
+      "name": "Court Pro",
+      "description": "Lateral support for every cut. Herringbone sole, premium leather upper.",
+      "origin": "Court",
+      "price": 95,
+      "img": "https://images.unsplash.com/photo-1607522370275-f14206abe5d3?w=500&h=500&fit=crop&q=80"
     },
     {
       "id": 4,
-      "name": "Highland Peaks",
-      "description": "Wine-like acidity and berry aromatics from high altitude farms.",
-      "origin": "Kenya",
-      "price": 16
+      "name": "Trail Blazer",
+      "description": "Grip on any terrain. Vibram outsole, waterproof mesh upper, reflective trim.",
+      "origin": "Trail",
+      "price": 145,
+      "tag": "New Drop",
+      "img": "https://images.unsplash.com/photo-1539185441755-769473a23570?w=500&h=500&fit=crop&q=80"
     },
     {
       "id": 5,
-      "name": "Decaf Dream",
-      "description": "Swiss-water processed decaf with caramel sweetness.",
-      "origin": "Columbia",
-      "price": 11
+      "name": "Glide 2",
+      "description": "Daily trainer elevated. 40mm foam stack. Feather-light knit upper.",
+      "origin": "Running",
+      "price": 155,
+      "img": "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=500&h=500&fit=crop&q=80"
     },
     {
       "id": 6,
-      "name": "Saigon Street",
-      "description": "Bold Robusta-forward blend with a smoky edge.",
-      "origin": "Vietnam",
-      "price": 9.5
+      "name": "Low Rider",
+      "description": "Archive-inspired silhouette. Suede, canvas, and clean branding.",
+      "origin": "Lifestyle",
+      "price": 120,
+      "img": "https://images.unsplash.com/photo-1584735175315-9d5df23be664?w=500&h=500&fit=crop&q=80"
     },
     {
       "id": 7,
-      "name": "Yirgacheffe Light",
-      "description": "Floral jasmine and lemon zest in a delicate light roast.",
-      "origin": "Ethiopia",
-      "price": 15
+      "name": "Volt",
+      "description": "Explosive performance on hardwood. Zoom-like cushioning. Wide base.",
+      "origin": "Court",
+      "price": 105,
+      "tag": "Limited",
+      "img": "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=500&h=500&fit=crop&q=80"
     },
     {
       "id": 8,
-      "name": "Savannah Gold",
-      "description": "Balanced cup with honey and black tea undertones.",
-      "origin": "Kenya",
-      "price": 13.25
+      "name": "Phantom",
+      "description": "Night-run ready. Max grip. 360° reflective print. Aggressive lug pattern.",
+      "origin": "Trail",
+      "price": 135,
+      "img": "https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=500&h=500&fit=crop&q=80"
     }
   ]
 }

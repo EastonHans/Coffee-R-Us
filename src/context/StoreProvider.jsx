@@ -2,14 +2,14 @@ import { useCallback, useMemo } from 'react'
 import { StoreContext } from './storeContext.js'
 import { useFetchJson } from '../hooks/useFetchJson.js'
 
-// CRUD actions: addCoffee (POST), updateCoffee (PATCH), deleteCoffee (DELETE)
+// CRUD actions: addSneaker (POST), updateSneaker (PATCH), deleteSneaker (DELETE)
 // Mutations update local state optimistically so they work on static hosts too.
 export function StoreProvider({ children }) {
   const storeRes = useFetchJson('/store_info')
-  const coffeeRes = useFetchJson('/coffee')
+  const sneakerRes = useFetchJson('/sneakers')
 
-  const loading = storeRes.loading || coffeeRes.loading
-  const error = storeRes.error || coffeeRes.error
+  const loading = storeRes.loading || sneakerRes.loading
+  const error = storeRes.error || sneakerRes.error
 
   const storeInfo = useMemo(() => {
     const rows = storeRes.data
@@ -17,68 +17,63 @@ export function StoreProvider({ children }) {
     return rows[0]
   }, [storeRes.data])
 
-  const coffees = useMemo(() => {
-    const rows = coffeeRes.data
+  const sneakers = useMemo(() => {
+    const rows = sneakerRes.data
     return Array.isArray(rows) ? rows : []
-  }, [coffeeRes.data])
+  }, [sneakerRes.data])
 
   const refreshAll = useCallback(async () => {
-    await Promise.all([storeRes.reload(), coffeeRes.reload()])
-  }, [storeRes, coffeeRes])
+    await Promise.all([storeRes.reload(), sneakerRes.reload()])
+  }, [storeRes, sneakerRes])
 
-  const addCoffee = useCallback(
+  const addSneaker = useCallback(
     async (payload) => {
-      // Optimistic update — works even if the API is read-only (e.g. Vercel static)
-      const nextId = Math.max(0, ...(coffeeRes.data ?? []).map((c) => Number(c.id))) + 1
+      const nextId = Math.max(0, ...(sneakerRes.data ?? []).map((s) => Number(s.id))) + 1
       const created = { id: nextId, ...payload }
-      coffeeRes.setData((prev) => [...(prev ?? []), created])
-
-      // Best-effort persist to json-server when running locally
-      fetch('/coffee', {
+      sneakerRes.setData((prev) => [...(prev ?? []), created])
+      fetch('/sneakers', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
-      }).catch(() => {/* no-op on static hosts */})
+      }).catch(() => {})
     },
-    [coffeeRes],
+    [sneakerRes],
   )
 
-  const updateCoffee = useCallback(
+  const updateSneaker = useCallback(
     async (id, partial) => {
-      coffeeRes.setData((prev) =>
-        (prev ?? []).map((c) => (String(c.id) === String(id) ? { ...c, ...partial } : c)),
+      sneakerRes.setData((prev) =>
+        (prev ?? []).map((s) => (String(s.id) === String(id) ? { ...s, ...partial } : s)),
       )
-
-      fetch(`/coffee/${id}`, {
+      fetch(`/sneakers/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(partial),
       }).catch(() => {})
     },
-    [coffeeRes],
+    [sneakerRes],
   )
 
-  const deleteCoffee = useCallback(
+  const deleteSneaker = useCallback(
     async (id) => {
-      coffeeRes.setData((prev) => (prev ?? []).filter((c) => String(c.id) !== String(id)))
-
-      fetch(`/coffee/${id}`, { method: 'DELETE' }).catch(() => {})
+      sneakerRes.setData((prev) => (prev ?? []).filter((s) => String(s.id) !== String(id)))
+      fetch(`/sneakers/${id}`, { method: 'DELETE' }).catch(() => {})
     },
-    [coffeeRes],
+    [sneakerRes],
   )
 
   const value = useMemo(
     () => ({
       storeInfo,
-      coffees,
+      sneakers,
       loading,
       error,
       refreshAll,
-      addCoffee,
-      updateCoffee,
-      deleteCoffee,
+      addSneaker,
+      updateSneaker,
+      deleteSneaker,
     }),
-    [storeInfo, coffees, loading, error, refreshAll, addCoffee, updateCoffee, deleteCoffee],
+    [storeInfo, sneakers, loading, error, refreshAll, addSneaker, updateSneaker, deleteSneaker],
   )
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>

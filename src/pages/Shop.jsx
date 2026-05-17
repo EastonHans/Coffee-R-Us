@@ -1,65 +1,65 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useDebouncedValue } from '../hooks/useDebouncedValue.js'
 import { useStore } from '../context/useStore.js'
-import { filterCoffees } from '../lib/filterCoffees.js'
+import { filterSneakers, PRICE_MAX } from '../lib/filterSneakers.js'
+import { Reveal } from '../components/Layout.jsx'
 import { ShopSidebar } from './ShopSidebar.jsx'
 import { ProductList } from './ProductList.jsx'
 
 export function Shop() {
-  const { coffees, loading, error } = useStore()
+  const { sneakers, loading, error } = useStore()
   const [searchQuery, setSearchQuery] = useState('')
   const debouncedSearch = useDebouncedValue(searchQuery, 280)
-  const [selectedOrigins, setSelectedOrigins] = useState(() => new Set())
-
-  const toggleOrigin = useCallback((origin) => {
-    setSelectedOrigins((prev) => {
-      const next = new Set(prev)
-      if (next.has(origin)) next.delete(origin)
-      else next.add(origin)
-      return next
-    })
-  }, [])
+  const [activeCategory, setActiveCategory] = useState('all')
+  const [maxPrice, setMaxPrice] = useState(PRICE_MAX)
 
   const filtered = useMemo(
-    () => filterCoffees(coffees, debouncedSearch, selectedOrigins),
-    [coffees, debouncedSearch, selectedOrigins],
+    () => filterSneakers(sneakers, debouncedSearch, activeCategory, maxPrice),
+    [sneakers, debouncedSearch, activeCategory, maxPrice],
   )
+
+  const countLabel = `${filtered.length} Product${filtered.length !== 1 ? 's' : ''}`
 
   if (loading) {
     return (
-      <div className="shop-page" aria-busy="true">
+      <section id="shop" className="shop-page" aria-busy="true">
         <p className="muted" style={{ textAlign: 'center', paddingTop: '8rem' }}>Loading catalog…</p>
-      </div>
+      </section>
     )
   }
 
   if (error) {
     return (
-      <div className="shop-page">
+      <section id="shop" className="shop-page">
         <p className="error-text" role="alert" style={{ textAlign: 'center', paddingTop: '8rem' }}>
           {error}
         </p>
-      </div>
+      </section>
     )
   }
 
   return (
-    <div className="shop-page">
-      <div className="shop-header">
-        <p className="section-label">Our Selection</p>
-        <h2 className="section-title">The Collection</h2>
-      </div>
+    <section id="shop" className="shop-page">
+      <Reveal className="shop-header">
+        <div className="shop-title-group">
+          <p className="section-tag">The Collection</p>
+          <h2 className="shop-title">SHOP</h2>
+        </div>
+        <span className="product-count">{countLabel}</span>
+      </Reveal>
       <div className="shop-layout">
         <ShopSidebar
           searchQuery={searchQuery}
           onSearchQueryChange={setSearchQuery}
-          selectedOrigins={selectedOrigins}
-          onToggleOrigin={toggleOrigin}
+          activeCategory={activeCategory}
+          onCategoryChange={setActiveCategory}
+          maxPrice={maxPrice}
+          onMaxPriceChange={setMaxPrice}
         />
         <section className="shop-content" aria-label="Product catalog">
           <ProductList items={filtered} />
         </section>
       </div>
-    </div>
+    </section>
   )
 }

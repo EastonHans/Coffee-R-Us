@@ -1,6 +1,6 @@
-# Coffee R Us
+# STRYD
 
-A single-page application for a specialty coffee shop. Browse the catalog, filter by origin, manage inventory through an admin portal, and view individual product pages, all backed by a local REST API.
+A single-page application for a performance sneaker brand. Browse the catalog, filter by category and price, manage inventory through an admin portal, and view individual product pages — backed by a local REST API in development and static JSON on deploy.
 
 ---
 
@@ -12,7 +12,7 @@ A single-page application for a specialty coffee shop. Browse the catalog, filte
 | Routing | React Router v7 (data router) |
 | State | Context API + custom hooks |
 | Styling | Pure CSS (custom design system, no UI library) |
-| Mock API | json-server |
+| Mock API | json-server (dev) / static JSON + Vercel rewrites (prod) |
 | Build | Vite |
 | Testing | Vitest + Testing Library |
 
@@ -20,25 +20,29 @@ A single-page application for a specialty coffee shop. Browse the catalog, filte
 
 ## Features
 
+**Home**
+- Store info (name, tagline, phone) loaded from `/store_info`
+- Full-viewport hero with animated display typography
+- Scrolling marquee ticker and animated stat counters
+- Brand story, feature pillars, and scroll-reveal sections
+- Graceful loading and error states throughout
+
 **Shop**
-- Product catalog fetched from a REST API
-- Debounced search across name, description, and origin
-- Origin filter with multi-select checkboxes
-- Responsive grid layout
+- Product catalog fetched from `/sneakers`
+- Debounced search across name, description, category, and tag
+- Category filter chips (Running, Lifestyle, Court, Trail)
+- Max-price range slider
+- Responsive product grid with images, category badges, and hover interactions
 
-**Product Page**
-- Individual route per product (`/coffee/:id`)
+**Product Page** (`/sneakers/:id`)
+- Individual route per sneaker
 - Inline admin edit form with PATCH support
-- Delete product with confirmation
+- Delete product with confirmation dialog
 
-**Admin Portal**
-- Add new products via a validated form (POST)
+**Admin Portal** (`/admin`)
+- Add new styles via a validated form (POST)
 - Client-side validation with accessible error states
 - Redirects to shop on success
-
-**Home**
-- Store info (name, tagline, phone) loaded from API
-- Graceful loading and error states
 
 ---
 
@@ -46,44 +50,67 @@ A single-page application for a specialty coffee shop. Browse the catalog, filte
 
 ```
 src/
-├── components/        # Layout, Navbar
+├── components/        # Shared layout: Navbar, Cursor, Reveal wrapper
 ├── context/           # StoreContext, StoreProvider, useStore hook
 ├── hooks/             # useFetchJson, useDebouncedValue
-├── lib/               # filterCoffees, parsePrice (pure utility functions)
+├── lib/               # filterSneakers, parsePrice (pure utility functions)
 ├── pages/             # Home, Shop, ShopSidebar, ProductList, ProductCard,
-│                      # CoffeeProductPage, AdminPortal
-└── test-utils/        # renderAppWithDataRouter, mockApiFetch
+│                      # SneakerProductPage, AdminPortal
+└── test-utils/        # renderAppWithDataRouter, createFetchMock
 ```
 
-Data fetching lives in `useFetchJson` — a custom hook that handles loading state, error state, abort on unmount, and exposes a `reload` callback for post-mutation refetches. `StoreProvider` composes two instances of it and exposes `addCoffee`, `updateCoffee`, and `deleteCoffee` actions down the tree via context.
+`useFetchJson` handles loading state, error state, abort on unmount, and exposes a `reload` callback for post-mutation refetches.
+
+`StoreProvider` composes two `useFetchJson` instances (catalog + store info) and exposes `addProduct`, `updateProduct`, and `deleteProduct` actions via context. Mutations update local state optimistically so the UI stays functional on static hosts where API writes are unavailable.
 
 ---
 
-## API (json-server)
+## API
+
+**Development** — json-server on port 3001, proxied by Vite:
 
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/coffee` | List all products |
-| POST | `/coffee` | Add a product |
-| PATCH | `/coffee/:id` | Update a product |
-| DELETE | `/coffee/:id` | Remove a product |
+| GET | `/sneakers` | List all products |
+| POST | `/sneakers` | Add a product |
+| PATCH | `/sneakers/:id` | Update a product |
+| DELETE | `/sneakers/:id` | Remove a product |
 | GET | `/store_info` | Store metadata |
+
+**Production** — `/sneakers` and `/store_info` are rewritten by Vercel to `public/sneakers.json` and `public/store_info.json`.
+
+Product shape:
+
+```json
+{
+  "id": "1",
+  "name": "Runner X1",
+  "description": "Carbon plate + StrydFoam™ stack.",
+  "origin": "Running",
+  "price": 129,
+  "tag": "Best Seller",
+  "img": "https://..."
+}
+```
+
+> `origin` is the category field (Running, Lifestyle, Court, Trail). The field name is carried over from the initial data model.
 
 ---
 
 ## Getting Started
 
 ```bash
-# Install dependencies
 npm install
 
-# Start both Vite dev server and json-server together
+# Start Vite dev server and json-server together
 npm run dev:full
 
 # Or run them separately
 npm run server   # json-server on :3001
 npm run dev      # Vite on :5173
 ```
+
+Open the app at [http://localhost:5173](http://localhost:5173). Requests to `/sneakers` and `/store_info` are proxied to json-server automatically.
 
 ---
 
@@ -93,26 +120,29 @@ npm run dev      # Vite on :5173
 npm run test:run
 ```
 
-21 tests across 7 suites covering:
+21 tests across 7 suites:
 
-- Unit tests for pure utility functions (`filterCoffees`, `parsePrice`)
-- Integration tests for the Shop page (search, debounce, origin filter)
-- Integration tests for the Admin Portal (validation, POST, navigation)
-- Integration tests for the Product Page (PATCH, DELETE)
-- Full routing tests (navbar navigation, dynamic routes, data loading)
-- Home page rendering from API data
+| Suite | Coverage |
+|---|---|
+| `filterSneakers` | Pure filter logic |
+| `parsePrice` | Price parsing edge cases |
+| Shop | Catalog load, debounced search, category filter |
+| Admin Portal | Validation, POST, redirect on success |
+| Product Page | Detail view, PATCH, DELETE |
+| Routing | Navbar, `/sneakers/:id`, API-driven home |
+| Home | Store info rendering from API |
 
-Tests use a `createFetchMock` utility that simulates the full json-server API in memory, including stateful POST/PATCH/DELETE mutations, so no real network calls are made.
+Tests use `createFetchMock` — an in-memory implementation of the full json-server API including stateful POST/PATCH/DELETE — so no real network calls are made.
 
 ---
 
 ## Design
 
-Custom design system built from scratch, no component library. Inspired by high-end editorial coffee branding:
+Custom design system built from scratch, no component library. Sport/editorial aesthetic inspired by performance brands and kinetic web design:
 
-- **Fonts:** Cormorant Garamond (serif headings) + DM Sans (UI text)
-- **Palette:** Deep espresso backgrounds, parchment text, gold accents
-- **Details:** Animated scroll indicator, card hover effects, gold underline nav transitions, CSS custom properties throughout
+- **Fonts:** Anton (display headings), Barlow Condensed (labels/UI), DM Sans (body)
+- **Palette:** Near-black backgrounds (`#060606`), off-white text, lime green accents (`#d4f53c`)
+- **Details:** Custom cursor with lerp-smoothed ring, scrolling marquee, scroll-reveal animations, animated stat counters, card hover states, CSS custom properties throughout `index.css`
 
 ---
 
@@ -124,5 +154,7 @@ Custom design system built from scratch, no component library. Inspired by high-
 | `npm run server` | json-server mock API |
 | `npm run dev:full` | Both concurrently |
 | `npm run build` | Production build |
+| `npm run preview` | Preview production build locally |
+| `npm run test` | Vitest in watch mode |
 | `npm run test:run` | Run test suite once |
 | `npm run lint` | ESLint |

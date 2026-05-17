@@ -1,7 +1,7 @@
 {
   "rewrites": [
-    { "source": "/coffee", "destination": "/coffee.json" },
-    { "source": "/coffee/:id", "destination": "/coffee.json" },
+    { "source": "/sneakers", "destination": "/coffee.json" },
+    { "source": "/sneakers/:id", "destination": "/coffee.json" },
     { "source": "/store_info", "destination": "/store_info.json" },
     { "source": "/((?!.*\\.).*)", "destination": "/index.html" }
   ]

@@ -3,16 +3,16 @@ import { ProductCard } from './ProductCard.jsx'
 export function ProductList({ items }) {
   if (items.length === 0) {
     return (
-      <div className="product-empty muted" role="status">
-        No products match your search or filters.
+      <div className="product-empty" role="status">
+        No styles found
       </div>
     )
   }
 
   return (
     <div className="product-grid">
-      {items.map((coffee) => (
-        <ProductCard key={coffee.id} coffee={coffee} />
+      {items.map((item) => (
+        <ProductCard key={item.id} sneaker={item} />
       ))}
     </div>
   )

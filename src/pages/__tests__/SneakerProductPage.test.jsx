@@ -3,16 +3,16 @@ import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { StoreProvider } from '../../context/StoreProvider.jsx'
-import { CoffeeProductPage } from '../CoffeeProductPage.jsx'
-import { createFetchMock, SAMPLE_COFFEES } from '../../test-utils/mockApiFetch.js'
+import { SneakerProductPage } from '../SneakerProductPage.jsx'
+import { createFetchMock, SAMPLE_SNEAKERS } from '../../test-utils/mockApiFetch.js'
 
 function renderProductPage(id = '1') {
-  const fetchMock = createFetchMock({ coffees: SAMPLE_COFFEES })
+  const fetchMock = createFetchMock({ sneakers: SAMPLE_SNEAKERS })
   vi.stubGlobal('fetch', fetchMock)
 
   const router = createMemoryRouter(
-    [{ path: '/coffee/:id', element: <CoffeeProductPage /> }],
-    { initialEntries: [`/coffee/${id}`] },
+    [{ path: '/sneakers/:id', element: <SneakerProductPage /> }],
+    { initialEntries: [`/sneakers/${id}`] },
   )
 
   render(
@@ -24,7 +24,7 @@ function renderProductPage(id = '1') {
   return { router, fetchMock }
 }
 
-describe('CoffeeProductPage', () => {
+describe('SneakerProductPage', () => {
   afterEach(() => {
     vi.unstubAllGlobals()
   })
@@ -32,19 +32,19 @@ describe('CoffeeProductPage', () => {
   it('displays product details for the given id', async () => {
     renderProductPage('1')
     expect(
-      await screen.findByRole('heading', { level: 1, name: 'Vanilla Bean' }),
+      await screen.findByRole('heading', { level: 1, name: 'Runner X1' }),
     ).toBeInTheDocument()
-    expect(screen.getByText(/Origin:/i)).toBeInTheDocument()
+    expect(screen.getByText(/Category:/i)).toBeInTheDocument()
   })
 
   it('PATCHes the product when save changes is submitted', async () => {
     const user = userEvent.setup()
     const { fetchMock } = renderProductPage('1')
 
-    const form = await screen.findByRole('form', { name: /edit coffee product/i })
+    const form = await screen.findByRole('form', { name: /edit sneaker product/i })
     const priceInput = within(form).getByRole('textbox', { name: /^Price$/i })
     await user.clear(priceInput)
-    await user.type(priceInput, '22')
+    await user.type(priceInput, '149')
     await user.click(screen.getByRole('button', { name: /Save changes/i }))
 
     await waitFor(() => {
@@ -53,12 +53,12 @@ describe('CoffeeProductPage', () => {
 
     const patches = fetchMock.mock.calls.filter(
       ([url, init]) =>
-        String(url).includes('/coffee/1') &&
+        String(url).includes('/sneakers/1') &&
         init &&
         String(init.method).toUpperCase() === 'PATCH',
     )
     expect(patches.length).toBeGreaterThanOrEqual(1)
-    expect(JSON.parse(String(patches.at(-1)[1].body)).price).toBe(22)
+    expect(JSON.parse(String(patches.at(-1)[1].body)).price).toBe(149)
   })
 
   it('DELETEs the product and navigates to /shop', async () => {
@@ -66,8 +66,8 @@ describe('CoffeeProductPage', () => {
     vi.stubGlobal('confirm', () => true)
     const { router, fetchMock } = renderProductPage('1')
 
-    await screen.findByRole('heading', { level: 1, name: 'Vanilla Bean' })
-    await user.click(screen.getByRole('button', { name: /Delete product/i }))
+    await screen.findByRole('heading', { level: 1, name: 'Runner X1' })
+    await user.click(screen.getByRole('button', { name: /Delete style/i }))
 
     await waitFor(() => {
       expect(router.state.location.pathname).toBe('/shop')
@@ -75,7 +75,7 @@ describe('CoffeeProductPage', () => {
 
     const deletes = fetchMock.mock.calls.filter(
       ([url, init]) =>
-        String(url).includes('/coffee/1') &&
+        String(url).includes('/sneakers/1') &&
         init &&
         String(init.method).toUpperCase() === 'DELETE',
     )

@@ -8,7 +8,7 @@ export function Navbar() {
     <header className="nav">
       <nav className="nav__inner" aria-label="Primary">
         <NavLink to="/" className="nav__logo" end>
-          Coffee R Us
+          STRYD
         </NavLink>
         <div className="nav__links">
           <NavLink to="/" className={linkClass} end>
@@ -18,7 +18,10 @@ export function Navbar() {
             Shop
           </NavLink>
           <NavLink to="/admin" className={linkClass}>
-            Admin Portal
+            Admin
+          </NavLink>
+          <NavLink to="/shop" className="nav__cta">
+            Shop Now
           </NavLink>
         </div>
       </nav>

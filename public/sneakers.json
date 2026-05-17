@@ -1,0 +1,10 @@
+[
+  { "id": 1, "name": "Runner X1", "description": "Carbon plate + StrydFoam stack. Race-day performance in an everyday trainer.", "origin": "Running", "price": 129 },
+  { "id": 2, "name": "Air Low", "description": "Street-ready silhouette. All-day comfort. Clean enough for anywhere.", "origin": "Lifestyle", "price": 110 },
+  { "id": 3, "name": "Court Pro", "description": "Lateral support for every cut. Herringbone sole, premium leather upper.", "origin": "Court", "price": 95 },
+  { "id": 4, "name": "Trail Blazer", "description": "Grip on any terrain. Vibram outsole, waterproof mesh upper, reflective trim.", "origin": "Trail", "price": 145 },
+  { "id": 5, "name": "Glide 2", "description": "Daily trainer elevated. 40mm foam stack. Feather-light knit upper.", "origin": "Running", "price": 155 },
+  { "id": 6, "name": "Low Rider", "description": "Archive-inspired silhouette. Suede, canvas, and clean branding.", "origin": "Lifestyle", "price": 120 },
+  { "id": 7, "name": "Volt", "description": "Explosive performance on hardwood. Zoom-like cushioning. Wide base.", "origin": "Court", "price": 105 },
+  { "id": 8, "name": "Phantom", "description": "Night-run ready. Max grip. 360 reflective print. Aggressive lug pattern.", "origin": "Trail", "price": 135 }
+]

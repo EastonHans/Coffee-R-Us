@@ -6,8 +6,8 @@ import { StoreProvider } from '../context/StoreProvider.jsx'
 import { Home } from '../pages/Home.jsx'
 import { Shop } from '../pages/Shop.jsx'
 import { AdminPortal } from '../pages/AdminPortal.jsx'
-import { CoffeeProductPage } from '../pages/CoffeeProductPage.jsx'
-import { createFetchMock, SAMPLE_COFFEES } from './mockApiFetch.js'
+import { SneakerProductPage } from '../pages/SneakerProductPage.jsx'
+import { createFetchMock, SAMPLE_SNEAKERS } from './mockApiFetch.js'
 
 const appRoutes = [
   {
@@ -17,19 +17,16 @@ const appRoutes = [
       { index: true, element: <Home /> },
       { path: 'shop', element: <Shop /> },
       { path: 'admin', element: <AdminPortal /> },
-      { path: 'coffee/:id', element: <CoffeeProductPage /> },
+      { path: 'sneakers/:id', element: <SneakerProductPage /> },
     ],
   },
 ]
 
-/**
- * Full app route tree with a data router (single document, no nested MemoryRouter).
- */
 export function renderAppWithDataRouter(
   initialEntries = ['/'],
-  { coffees = SAMPLE_COFFEES } = {},
+  { sneakers = SAMPLE_SNEAKERS } = {},
 ) {
-  const fetchMock = createFetchMock({ coffees })
+  const fetchMock = createFetchMock({ sneakers })
   vi.stubGlobal('fetch', fetchMock)
 
   const router = createMemoryRouter(appRoutes, { initialEntries })

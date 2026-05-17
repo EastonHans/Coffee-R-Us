@@ -1,19 +1,34 @@
 import { Link } from 'react-router-dom'
+import { pickFallbackImage } from '../lib/filterSneakers.js'
 
-export function ProductCard({ coffee }) {
-  const { id, name, description, origin, price } = coffee
+export function ProductCard({ sneaker }) {
+  const { id, name, description, origin, price, tag, img } = sneaker
+  const imageSrc = img || pickFallbackImage(Number(id))
+
+  const handleImgError = (e) => {
+    e.currentTarget.src = pickFallbackImage(Number(id))
+  }
+
   return (
     <article className="product-card">
-      <span className="product-card__badge">{origin}</span>
-      <h2 className="product-card__title">
-        <Link to={`/coffee/${id}`} className="product-card__link">
-          {name}
+      <div className="card-img-wrap">
+        <img src={imageSrc} alt={name} loading="lazy" onError={handleImgError} />
+        {tag ? <span className="card-category">{tag}</span> : null}
+        <Link to={`/sneakers/${id}`} className="card-quick">
+          Quick View
         </Link>
-      </h2>
-      <p className="product-card__desc">{description}</p>
-      <div className="product-card__footer">
-        <span className="product-card__meta">{origin}</span>
-        <span className="product-card__price">${Number(price).toFixed(2)}</span>
+      </div>
+      <div className="card-info">
+        <h2 className="card-name">
+          <Link to={`/sneakers/${id}`} className="card-name__link">
+            {name}
+          </Link>
+        </h2>
+        <p className="card-desc">{description}</p>
+        <div className="card-footer">
+          <span className="card-price">${Number(price)}</span>
+          <span className="card-tag">{origin}</span>
+        </div>
       </div>
     </article>
   )
