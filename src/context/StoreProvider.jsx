@@ -2,64 +2,74 @@ import { useCallback, useMemo } from 'react'
 import { StoreContext } from './storeContext.js'
 import { useFetchJson } from '../hooks/useFetchJson.js'
 
-// CRUD actions: addSneaker (POST), updateSneaker (PATCH), deleteSneaker (DELETE)
-// Mutations update local state optimistically so they work on static hosts too.
+// Fetches /db.json (static file served by Vercel) instead of json-server routes.
+// Mutations update local state optimistically — network calls are fire-and-forget
+// so they work on static hosts without a running server.
 export function StoreProvider({ children }) {
-  const storeRes = useFetchJson('/store_info')
-  const sneakerRes = useFetchJson('/sneakers')
+  const dbRes = useFetchJson('/db.json')
 
-  const loading = storeRes.loading || sneakerRes.loading
-  const error = storeRes.error || sneakerRes.error
+  const loading = dbRes.loading
+  const error = dbRes.error
 
   const storeInfo = useMemo(() => {
-    const rows = storeRes.data
+    const rows = dbRes.data?.store_info
     if (!Array.isArray(rows) || rows.length === 0) return null
     return rows[0]
-  }, [storeRes.data])
+  }, [dbRes.data])
 
   const sneakers = useMemo(() => {
-    const rows = sneakerRes.data
+    const rows = dbRes.data?.sneakers
     return Array.isArray(rows) ? rows : []
-  }, [sneakerRes.data])
+  }, [dbRes.data])
 
   const refreshAll = useCallback(async () => {
-    await Promise.all([storeRes.reload(), sneakerRes.reload()])
-  }, [storeRes, sneakerRes])
+    await dbRes.reload()
+  }, [dbRes])
 
   const addSneaker = useCallback(
     async (payload) => {
-      const nextId = Math.max(0, ...(sneakerRes.data ?? []).map((s) => Number(s.id))) + 1
+      const nextId =
+        Math.max(0, ...(dbRes.data?.sneakers ?? []).map((s) => Number(s.id))) + 1
       const created = { id: nextId, ...payload }
-      sneakerRes.setData((prev) => [...(prev ?? []), created])
+      dbRes.setData((prev) => ({
+        ...prev,
+        sneakers: [...(prev?.sneakers ?? []), created],
+      }))
       fetch('/sneakers', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       }).catch(() => {})
     },
-    [sneakerRes],
+    [dbRes],
   )
 
   const updateSneaker = useCallback(
     async (id, partial) => {
-      sneakerRes.setData((prev) =>
-        (prev ?? []).map((s) => (String(s.id) === String(id) ? { ...s, ...partial } : s)),
-      )
+      dbRes.setData((prev) => ({
+        ...prev,
+        sneakers: (prev?.sneakers ?? []).map((s) =>
+          String(s.id) === String(id) ? { ...s, ...partial } : s,
+        ),
+      }))
       fetch(`/sneakers/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(partial),
       }).catch(() => {})
     },
-    [sneakerRes],
+    [dbRes],
   )
 
   const deleteSneaker = useCallback(
     async (id) => {
-      sneakerRes.setData((prev) => (prev ?? []).filter((s) => String(s.id) !== String(id)))
+      dbRes.setData((prev) => ({
+        ...prev,
+        sneakers: (prev?.sneakers ?? []).filter((s) => String(s.id) !== String(id)),
+      }))
       fetch(`/sneakers/${id}`, { method: 'DELETE' }).catch(() => {})
     },
-    [sneakerRes],
+    [dbRes],
   )
 
   const value = useMemo(
