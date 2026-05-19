@@ -1,6 +1,6 @@
 # STRYD
 
-A single-page application for a performance sneaker brand. Browse the catalog, filter by category and price, manage inventory through an admin portal, and view individual product pages — backed by a local REST API in development and static JSON on deploy.
+A single-page application for a performance sneaker brand. Browse the catalog, filter by category and price, manage inventory through an admin portal, and view individual product pages  backed by a local REST API in development and static JSON on deploy.
 
 ---
 
@@ -67,7 +67,7 @@ src/
 
 ## API
 
-**Development** — json-server on port 3001, proxied by Vite:
+**Development**  json-server on port 3001, proxied by Vite:
 
 | Method | Endpoint | Description |
 |---|---|---|
@@ -77,7 +77,7 @@ src/
 | DELETE | `/sneakers/:id` | Remove a product |
 | GET | `/store_info` | Store metadata |
 
-**Production** — `/sneakers` and `/store_info` are rewritten by Vercel to `public/sneakers.json` and `public/store_info.json`.
+**Production**  `/sneakers` and `/store_info` are rewritten by Vercel to `public/sneakers.json` and `public/store_info.json`.
 
 Product shape:
 
@@ -132,7 +132,7 @@ npm run test:run
 | Routing | Navbar, `/sneakers/:id`, API-driven home |
 | Home | Store info rendering from API |
 
-Tests use `createFetchMock` — an in-memory implementation of the full json-server API including stateful POST/PATCH/DELETE — so no real network calls are made.
+Tests use `createFetchMock`  an in-memory implementation of the full json-server API including stateful POST/PATCH/DELETE  so no real network calls are made.
 
 ---
 
