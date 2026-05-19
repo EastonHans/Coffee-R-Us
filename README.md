@@ -1,4 +1,4 @@
-# STRYD
+# STRYDE
 
 A single-page application for a performance sneaker brand. Browse the catalog, filter by category and price, manage inventory through an admin portal, and view individual product pages  backed by a local REST API in development and static JSON on deploy.
 
